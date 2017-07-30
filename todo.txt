@@ -36,15 +36,23 @@ x- Main Menu  - As a customer, instead of automatically seeing the book list,
         x-add to cusbk
         x-delete from booklist
     x-cusbk not contain any in bookList
-- Successful Checkout - As a customer, I would like to know that a book
+x- Successful Checkout - As a customer, I would like to know that a book
     has been checked out by seeing the message “Thank you! Enjoy the book”.
-- Unsuccessful Checkout - As a customer, I would like to be notified if the
+x- Unsuccessful Checkout - As a customer, I would like to be notified if the
     book I tried to check-out is not available by seeing the message, “That
     book is not available.”, so that I know that I need to select a
     different book or fix my spelling error.
 - Return Book - As a librarian, I would like customers to be able to return
     a book, so that other customers can check that book out. Returned books
     should appear in the list of library books.
+    x- should say "return books in main menu"
+    x- should click to enter, and display list of checked books
+    x- method should remove book from cust books
+    x- method should add book to bookList
+    x- method should reuse menu options from bookMenu
+    - should subsequently print main menu
+    - (below) good click -> good msg
+    - bad operation -> bad msg
 - Successful Return - As a customer, I would like to be notified if the
     book I am returning belongs to this library by seeing the message,
     “Thank you for returning the book.”, so that I know I returned the
@@ -55,10 +63,9 @@ x- Main Menu  - As a customer, instead of automatically seeing the book list,
     it to the correct library or fix my spelling error.
 
     urgent issues
-    1. should reprint main menu after check out book
-    2. test does not check for moving to next menu
     9. mainMenuSelect is testing 3 menu options -> decouple and test these singly! then have ONE integration test.
      You are mixing integration and unit testing
+    10. should integration test from beginning
 
     issues:
     2. go is not tested
@@ -66,3 +73,8 @@ x- Main Menu  - As a customer, instead of automatically seeing the book list,
     6. test doesnt check exit after "bye!"
     7. bookList should be mocked in test -> ie. adding more books to actual book list shouldnt break tests
     8. first get back to work, then get the great gatsby to function
+    9. test that "select book to checkout" gives error when book not found
+    10. asks for numbers in main menu and name of book/back in book list menu
+    11. could make printBookList private, IF can find a way to test in isolation. (maybe wrap it?)
+    12 rename bookLIst
+    13. mainMenuMessage shows up a lot -> should remove and test once
