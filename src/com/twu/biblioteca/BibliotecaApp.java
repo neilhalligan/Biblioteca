@@ -19,7 +19,8 @@ public class BibliotecaApp {
         populateBookList();
         printMenu();
         while (running) {
-            selectMenu(getInput(getReader()));
+//            selectMenu(getInput(getReader()), getInput(getReader()));
+            selectMenu(getReader(), getReader());
         }
     }
 
@@ -42,17 +43,21 @@ public class BibliotecaApp {
         String input = "";
         try {
             input = askUserInput(br);
+            System.out.println("getInput input var is: " + input);
         } catch(IOException ex) {
             System.out.println(ex.toString());
         }
         return input;
     }
 
-    public void selectMenu(String selector) {
-        if (selector.equals("1")) {
+    public void selectMenu(BufferedReader bufferSelector, BufferedReader bookSelector) {
+//    public void selectMenu(String menuSelector, String bookSelector) {
+        String menuSelector = getInput(bufferSelector);
+            System.out.println("menu selector is: " + menuSelector);
+        if (menuSelector.equals("1")) {
             printBookList();
-            selectBookToCheckout(selector);
-        } else if (selector.equals("2")){
+            selectBookToCheckout(getInput(bufferSelector));
+        } else if (menuSelector.equals("2")){
             quit();
         } else{
             System.out.println("Select a valid menu option!");
@@ -60,6 +65,8 @@ public class BibliotecaApp {
     }
 
     public void selectBookToCheckout(String selector) {
+        System.out.println("bookselector is: " + selector);
+
         Book bookToCheckout = null;
 
         for (Book book : bookList) {

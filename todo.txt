@@ -55,14 +55,13 @@ x- Main Menu  - As a customer, instead of automatically seeing the book list,
     it to the correct library or fix my spelling error.
 
     urgent issues
-    1. picks book by number, and yet says by name (change string only, but requires index to complete test)
+    1. should reprint main menu after check out book
     2. test does not check for moving to next menu
+    9. mainMenuSelect is testing 3 menu options -> decouple and test these singly! then have ONE integration test.
+     You are mixing integration and unit testing
 
     issues:
-    1. no integration tests/ main() -> is it ok to design without a main? programme only runs in units
     2. go is not tested
-    3. mock objects - not testing process finished
-    4. change from numbers to typing names of things
     5. selectMenu(getInput()); move get input to inside selectMenu
     6. test doesnt check exit after "bye!"
     7. bookList should be mocked in test -> ie. adding more books to actual book list shouldnt break tests
