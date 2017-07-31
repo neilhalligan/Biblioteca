@@ -62,7 +62,7 @@ public class BibliotecaAppTest {
             expectedOutput += book.getTitle() + " | " + book.getAuthor() + " | " + book.getYearPublished() + "\n";
         }
 
-        biblioteca.printBookList();
+        biblioteca.printLibraryBookList();
         assertEquals(expectedOutput, outContent.toString());
     }
 
@@ -76,22 +76,18 @@ public class BibliotecaAppTest {
     }
 
     @Test
-    public void mainMenuSelectReturnBooks() throws Exception {
-        Reader InputString = new StringReader("2\n");
-        BufferedReader menuInput = new BufferedReader(InputString);
-        String expectedOutput = "Type book title to return book, type \"back\" to go back\n";
+    public void printReturnBookList() throws Exception {
+        String expectedOutput = returnMenuMessage;
         for(Book book : biblioteca.customerBooks) {
             expectedOutput += book.getTitle() + " | " + book.getAuthor() + " | " + book.getYearPublished() + "\n";
         }
-        biblioteca.selectMainMenu(menuInput);
-        assertEquals(expectedOutput, outContent.toString());
     }
 
     @Test
     public void mainMenuQuit() throws Exception {
-        Reader InputString = new StringReader("3\n");
+        Reader InputString = new StringReader("3\n1");
         BufferedReader menuInput = new BufferedReader(InputString);
-        String expectedOutput = "Bye!\n";
+        String expectedOutput = "";
         biblioteca.selectMainMenu(menuInput);
         assertEquals(expectedOutput, outContent.toString());
     }
@@ -172,34 +168,34 @@ public class BibliotecaAppTest {
         biblioteca.selectMainMenu(menuInput);
         expectedOutput += "Thank you for returning the book.\n";
         expectedOutput += mainMenuMessage;
+        assertEquals(expectedOutput, outContent.toString());
         assertTrue(biblioteca.libraryBooks.contains(bookToReturn));
         assertFalse(biblioteca.customerBooks.contains(bookToReturn));
+    }
+
+    @Test
+    public void returnMenuGoBack() throws Exception {
+        Reader menuInputString = new StringReader("2\nback\n");
+        BufferedReader menuInput = new BufferedReader(menuInputString);
+        String expectedOutput = returnMenuMessage;
+        for(Book book : biblioteca.customerBooks) {
+            expectedOutput += book.getTitle() + " | " + book.getAuthor() + " | " + book.getYearPublished() + "\n";
+        }
+        biblioteca.selectMainMenu(menuInput);
+        expectedOutput += mainMenuMessage;
         assertEquals(expectedOutput, outContent.toString());
     }
 
-//    @Test
-//    public void returnMenuGoBack() throws Exception {
-//        Reader menuInputString = new StringReader("1\nback\n");
-//        BufferedReader menuInput = new BufferedReader(menuInputString);
-//        String expectedOutput = bookMenuMessage;
-//        for(Book book : biblioteca.libraryBooks) {
-//            expectedOutput += book.getTitle() + " | " + book.getAuthor() + " | " + book.getYearPublished() + "\n";
-//        }
-//        biblioteca.selectMainMenu(menuInput);
-//        expectedOutput += mainMenuMessage;
-//        assertEquals(expectedOutput, outContent.toString());
-//    }
-//
-//    @Test
-//    public void returnMenuInvalidSelection() throws Exception {
-//        Reader menuInputString = new StringReader("1\ninvalid selection\n");
-//        BufferedReader menuInput = new BufferedReader(menuInputString);
-//        String expectedOutput = bookMenuMessage;
-//        for(Book book : biblioteca.libraryBooks) {
-//            expectedOutput += book.getTitle() + " | " + book.getAuthor() + " | " + book.getYearPublished() + "\n";
-//        }
-//        biblioteca.selectMainMenu(menuInput);
-//        expectedOutput += "That book is not available.\n";
-//        assertEquals(expectedOutput, outContent.toString());
-//    }
+    @Test
+    public void returnMenuInvalidSelection() throws Exception {
+        Reader menuInputString = new StringReader("2\ninvalid selection\n");
+        BufferedReader menuInput = new BufferedReader(menuInputString);
+        String expectedOutput = returnMenuMessage;
+        for(Book book : biblioteca.customerBooks) {
+            expectedOutput += book.getTitle() + " | " + book.getAuthor() + " | " + book.getYearPublished() + "\n";
+        }
+        biblioteca.selectMainMenu(menuInput);
+        expectedOutput += "That is not a valid book to return.\n";
+        assertEquals(expectedOutput, outContent.toString());
+    }
 }

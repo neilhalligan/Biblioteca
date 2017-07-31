@@ -44,7 +44,7 @@ public class BibliotecaApp {
     public void selectMainMenu(BufferedReader bufferSelector) {
         String menuSelector = getInput(bufferSelector);
         if (menuSelector.equals("1")) {
-            printBookList();
+            printLibraryBookList();
             selectBookToCheckout(getInput(bufferSelector));
         } else if (menuSelector.equals("2")) {
             printReturnBookList();
@@ -56,7 +56,7 @@ public class BibliotecaApp {
         }
     }
 
-    public void printBookList(){
+    public void printLibraryBookList(){
         System.out.println("Type book title to checkout book, type \"back\" to go back");
         for(Book book : libraryBooks) {
             System.out.println(book.getTitle() + " | " + book.getAuthor() + " | " + book.getYearPublished());
@@ -71,7 +71,7 @@ public class BibliotecaApp {
     }
 
     public void selectBookToCheckout(String selector) {
-        Book bookToCheckout = findBookByTitle(selector);
+        Book bookToCheckout = findBookByTitle(selector, libraryBooks);
         if (bookToCheckout != null) {
             addToCustomerBooks(bookToCheckout);
             System.out.println("Thank you! Enjoy the book");
@@ -84,15 +84,15 @@ public class BibliotecaApp {
     }
 
     public void selectBookToReturn(String selector) {
-        Book bookToCheckout = findBookByTitle(selector);
-        if (bookToCheckout != null) {
-            returnToLibraryBooks(bookToCheckout);
-            System.out.println("Thank you! Enjoy the book");
+        Book bookToReturn = findBookByTitle(selector, customerBooks);
+        if (bookToReturn != null) {
+            returnToLibraryBooks(bookToReturn);
+            System.out.println("Thank you for returning the book.");
             printMainMenu();
         } else if (selector.equals("back")) {
             printMainMenu();
         } else {
-            System.out.println("That book is not available.");
+            System.out.println("That is not a valid book to return.");
         }
     }
 
@@ -118,7 +118,6 @@ public class BibliotecaApp {
     }
 
     private void quit() {
-        System.out.println("Bye!");
         running = false;
     }
 
@@ -132,9 +131,9 @@ public class BibliotecaApp {
         return input;
     }
 
-    private Book findBookByTitle(String bookTitle) {
+    private Book findBookByTitle(String bookTitle, List<Book> books) {
         Book correctBook = null;
-        for (Book book : libraryBooks) {
+        for (Book book : books) {
             if (bookTitle.equals(book.getTitle())) {
                 correctBook = book;
             }
