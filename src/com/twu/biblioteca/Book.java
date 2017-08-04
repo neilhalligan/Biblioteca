@@ -1,8 +1,5 @@
 package com.twu.biblioteca;
 
-/**
- * Created by neil on 7/27/17.
- */
 public class Book {
     private String title;
     private String author;

@@ -62,19 +62,58 @@ x- Unsuccessful Return - As a customer, I would like to be notified if the
     message, “That is not a valid book to return.”, so that I can return
     it to the correct library or fix my spelling error.
 
-    Issues:
-    2. ask for number entry in main menu, and title entry in book menus
-    7. bookList should be mocked in test -> ie. adding more books to actual book list shouldnt break tests
-    13. mainMenuMessage shows up a lot -> should remove and test once
-
 List Movies - As a customer, I would like to see a list of available movies, so that I can browse for a
-            movie that I might check-out. Movies have a name, year, director and movie rating (from 1-10 or unrated).
-Check-out Movie - As a customer, I would like to check out a movie from the library, so I can enjoy it at home.
+            movie that I might check-out. Movies have a name, year, director and movie rating
+            (from 1-10 or unrated).\
+            x- create movie class
+            x-list "display movies"
+
+Check-out Movie x- As a customer, I would like to check out a movie from the library, so I can enjoy it at home.
 
 User Accounts - Login - As a librarian, I want to know who has checked out a book, so that I can hold them
-            accountable for returning it. Users must now login using their library number (which is in the format xxx-xxxx)
-            and a password in order to check-out and return books. User credentials are predefined, so registering new users
-            is not part of this story.
+                accountable for returning it. Users must now login using their library number (which is in the format xxx-xxxx)
+                and a password in order to check-out and return books. User credentials are predefined, so registering new users
+                is not part of this story.
+
+    -create a user class
+        x-has a password
+        x-has a username
+        x-has a login method
+        x-accesses current menu
+        x-has an array with this users checked out books only. access through this user.
+            -unit test add and remove book.
+            -integration test add and remove book.
+
+    -create librarian class
+        -has password.
+        -has a username.
+        -has a login method.
+        -can see "checked out books" only.
+
 User Accounts - User information - As a customer, I want to be able to see my user information (name, email address and phone
             number), so that I know that the library can contact me. This option should only be available when the customer is
             logged in and should only display that customer’s information.
+
+    this round:
+    -selectItemToCheckout (user)
+
+    Issues:
+    new
+    1. change menu main to be object responsive (dynamic).
+    2. biblioteca.booksController. libraryBooks.
+    3. if enter wrong book name, transferred back to main menu. Should have another shot at writing book name.
+    4. books controller shouldn't be printing main menu.
+    5. return menu message, book menu msg etc in one test.
+    6. check all method names and refactor.
+    7. delete rentals
+    8. put all rental lists into private and getters
+    9. change ask user and askUserInput
+    10. logs in user test does not work
+    11. need to test all private methods
+    12. a lot of books in user test, try to move up to controller level
+    13. checkout lambda functions
+
+    old
+    2. ask for number entry in main menu, and title entry in book menus
+    7. bookList should be mocked in test -> ie. adding more books to actual book list shouldnt break tests
+    13. mainMenuMessage shows up a lot -> should remove and test once

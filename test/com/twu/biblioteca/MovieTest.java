@@ -3,9 +3,6 @@ package com.twu.biblioteca;
 import org.junit.*;
 
 import static org.junit.Assert.*;
-/**
- * Created by neil on 7/30/17.
- */
 
 public class MovieTest {
 
@@ -14,7 +11,6 @@ public class MovieTest {
     @Before
     public void before() {
         movie1 = new Movie("Almost Famous", 2005, "Danny Boyle", 8);
-//        name, year, director and movie rating
     }
 
     @Test

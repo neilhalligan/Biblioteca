@@ -2,12 +2,14 @@ package com.twu.biblioteca;
 
 import java.io.*;
 import java.lang.*;
-import java.util.*;
+import java.nio.Buffer;
+
 
 public class BibliotecaApp {
-    List<Book> libraryBooks = new ArrayList<Book>();
-    List<Book> customerBooks = new ArrayList<Book>();
     private boolean running = true;
+    public UsersController usersController = new UsersController();
+    public BooksController booksController = new BooksController(usersController);
+    public MoviesController moviesController = new MoviesController();
 
     public static void main(String[] args) {
         BibliotecaApp biblio = new BibliotecaApp();
@@ -15,95 +17,68 @@ public class BibliotecaApp {
     }
 
     public void go() {
+        seed();
         welcome();
-        populateBookList();
-        printMainMenu();
-        while (running) {
-            selectMainMenu(getReader());
+        authenticateUser(getReader());
+    }
+
+    public void authenticateUser(BufferedReader br) {
+        String username = askUser(br, "username");
+        String password = askUser(br, "password");
+        if (usersController.login(username, password)) {
+            printMainMenu();
+            while (running) {
+                selectMainMenu(br);
+            }
+        } else {
+            System.out.println("Invalid login!");
         }
+    }
+
+    private String askUser(BufferedReader br, String input) {
+        System.out.println("Please enter " + input);
+        return getInput(br);
     }
 
     public void welcome() {
         System.out.println("Hello, welcome to Biblioteca!");
     }
 
-    public void populateBookList(){
-        Book bookA = new Book("The Great Gatsby", "F. Scott Fitzgerald", 1922);
-        Book bookB = new Book("Moby Dick","Herman Melville", 1851);
-        Book bookC = new Book("Frankenstein","Mary Shelley", 1818);
-        libraryBooks.add(bookA);
-        libraryBooks.add(bookB);
-        libraryBooks.add(bookC);
-        addToCustomerBooks(bookC);
-    }
-
     public void printMainMenu(){
-        System.out.println("Main Menu\n1 - List Books\n2 - Return Books\n3 - Quit");
+        System.out.println(
+                "Main Menu\nEnter one of the following options to continue\n-list books\n" +
+                "-return books\n-list movies\n-return movies\n-quit");
     }
 
     public void selectMainMenu(BufferedReader bufferSelector) {
         String menuSelector = getInput(bufferSelector);
-        if (menuSelector.equals("1")) {
-            printLibraryBookList();
-            selectBookToCheckout(getInput(bufferSelector));
-        } else if (menuSelector.equals("2")) {
-            printReturnBookList();
-            selectBookToReturn(getInput(bufferSelector));
-        } else if (menuSelector.equals("3")){
+        if (menuSelector.equals("list books")) {
+            booksController.printAvailableItems();
+            booksController.selectItemToCheckout(getInput(bufferSelector));
+            printMainMenu();
+        } else if (menuSelector.equals("return books")) {
+            booksController.printRentedItems();
+            booksController.selectItemToReturn(getInput(bufferSelector));
+            printMainMenu();
+        } else if (menuSelector.equals("list movies")) {
+            moviesController.printAvailableItems();
+            moviesController.selectItemToCheckout(getInput(bufferSelector));
+            printMainMenu();
+        } else if (menuSelector.equals("return movies")) {
+            moviesController.printRentedItems();
+            moviesController.selectItemToReturn(getInput(bufferSelector));
+            printMainMenu();
+        } else if (menuSelector.equals("quit")){
             quit();
         } else{
             System.out.println("Select a valid menu option!");
         }
     }
 
-    public void printLibraryBookList(){
-        System.out.println("Type book title to checkout book, type \"back\" to go back");
-        for(Book book : libraryBooks) {
-            System.out.println(book.getTitle() + " | " + book.getAuthor() + " | " + book.getYearPublished());
-        }
-    }
-
-    public void printReturnBookList(){
-        System.out.println("Type book title to return book, type \"back\" to go back");
-        for(Book book : customerBooks) {
-            System.out.println(book.getTitle() + " | " + book.getAuthor() + " | " + book.getYearPublished());
-        }
-    }
-
-    public void selectBookToCheckout(String selector) {
-        Book bookToCheckout = findBookByTitle(selector, libraryBooks);
-        if (bookToCheckout != null) {
-            addToCustomerBooks(bookToCheckout);
-            System.out.println("Thank you! Enjoy the book");
-            printMainMenu();
-        } else if (selector.equals("back")) {
-            printMainMenu();
-        } else {
-            System.out.println("That book is not available.");
-        }
-    }
-
-    public void selectBookToReturn(String selector) {
-        Book bookToReturn = findBookByTitle(selector, customerBooks);
-        if (bookToReturn != null) {
-            returnToLibraryBooks(bookToReturn);
-            System.out.println("Thank you for returning the book.");
-            printMainMenu();
-        } else if (selector.equals("back")) {
-            printMainMenu();
-        } else {
-            System.out.println("That is not a valid book to return.");
-        }
-    }
-
-    public void addToCustomerBooks(Book book) {
-        customerBooks.add(book);
-        libraryBooks.remove(book);
-    }
-
-    public void returnToLibraryBooks(Book book) {
-        customerBooks.remove(book);
-        libraryBooks.add(book);
+    public void seed() {
+        usersController.seedUsers();
+        booksController.seedRentals();
+        moviesController.seedRentals();
     }
 
     private BufferedReader getReader() {
@@ -129,15 +104,5 @@ public class BibliotecaApp {
             System.out.println(ex.toString());
         }
         return input;
-    }
-
-    private Book findBookByTitle(String bookTitle, List<Book> books) {
-        Book correctBook = null;
-        for (Book book : books) {
-            if (bookTitle.equals(book.getTitle())) {
-                correctBook = book;
-            }
-        }
-        return correctBook;
     }
 }

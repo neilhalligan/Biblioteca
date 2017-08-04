@@ -1,9 +1,6 @@
 package com.twu.biblioteca;
 
-/**
- * Created by neil on 7/30/17.
- */
-public class Movie {
+public class Movie extends Rental {
     private String name;
     private int year;
     private String director;
@@ -30,5 +27,13 @@ public class Movie {
 
     public int getMovieRating() {
         return movieRating;
+    }
+
+    public boolean equals(Object object) {
+        Movie movie = (Movie) object;
+        return (name == movie.name &&
+                year == movie.year &&
+                director == movie.director &&
+                movieRating == movie.movieRating);
     }
 }

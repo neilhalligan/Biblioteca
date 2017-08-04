@@ -1,7 +1,6 @@
 package com.twu.biblioteca;
 
 import org.junit.*;
-
 import static org.junit.Assert.*;
 
 public class BookTest {
