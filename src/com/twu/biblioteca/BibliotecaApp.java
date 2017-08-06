@@ -2,12 +2,12 @@ package com.twu.biblioteca;
 
 import java.io.*;
 import java.lang.*;
-import java.nio.Buffer;
 
 
 public class BibliotecaApp {
     private boolean running = true;
     public UsersController usersController = new UsersController();
+    public SessionsController sessionsController = new SessionsController(usersController);
     public BooksController booksController = new BooksController(usersController);
     public MoviesController moviesController = new MoviesController();
 
@@ -25,19 +25,11 @@ public class BibliotecaApp {
     public void authenticateUser(BufferedReader br) {
         String username = askUser(br, "username");
         String password = askUser(br, "password");
-        if (usersController.login(username, password)) {
-            printMainMenu();
-            while (running) {
-                selectMainMenu(br);
-            }
+        if (sessionsController.login(username, password)) {
+            run(br);
         } else {
             System.out.println("Invalid login!");
         }
-    }
-
-    private String askUser(BufferedReader br, String input) {
-        System.out.println("Please enter " + input);
-        return getInput(br);
     }
 
     public void welcome() {
@@ -45,20 +37,63 @@ public class BibliotecaApp {
     }
 
     public void printMainMenu(){
-        System.out.println(
-                "Main Menu\nEnter one of the following options to continue\n-list books\n" +
-                "-return books\n-list movies\n-return movies\n-quit");
+        if (sessionsController.userIsLibrarian()) {
+            printMainMenuAsLibrarian();
+        } else {
+            printMainMenuAsUser();
+        }
     }
 
-    public void selectMainMenu(BufferedReader bufferSelector) {
+    public void printMainMenuAsLibrarian(){
+        System.out.println(
+                "Main Menu\n" +
+                "Enter one of the following options to continue\n" +
+                "-rented books\n" +
+                "-rented movies\n" +
+                "-quit");
+    }
+
+    public void printMainMenuAsUser(){
+        System.out.println(
+                "Main Menu\nEnter one of the following options to continue\n-available books\n" +
+                "-rented books\n-list movies\n-return movies\n-quit");
+    }
+
+    public void selectMainMenu(BufferedReader br) {
+        if (sessionsController.userIsLibrarian()) {
+            selectMainMenuAsLibrarian(br);
+        } else {
+            selectMainMenuAsUser(br);
+        }
+    }
+
+    public void selectMainMenuAsLibrarian(BufferedReader bufferSelector) {
         String menuSelector = getInput(bufferSelector);
-        if (menuSelector.equals("list books")) {
-            booksController.printAvailableItems();
-            booksController.selectItemToCheckout(getInput(bufferSelector));
+        if (menuSelector.equals("rented books")) {
+            booksController.printRentedItemsAsLibrarian();
+            selectGoBack(bufferSelector);
             printMainMenu();
-        } else if (menuSelector.equals("return books")) {
-            booksController.printRentedItems();
-            booksController.selectItemToReturn(getInput(bufferSelector));
+        } else if (menuSelector.equals("return movies")) {
+            moviesController.printRentedItems();
+            moviesController.selectItemToReturn(getInput(bufferSelector));
+            printMainMenu();
+        } else if (menuSelector.equals("quit")){
+            quit();
+        } else{
+            System.out.println("Select a valid menu option!");
+        }
+    }
+
+    public void selectMainMenuAsUser(BufferedReader bufferSelector) {
+        String menuSelector = getInput(bufferSelector);
+        User user = sessionsController.getCurrentUser();
+        if (menuSelector.equals("available books")) {
+            booksController.printAvailableItems();
+            booksController.selectItemToCheckout(getInput(bufferSelector), user);
+            printMainMenu();
+        } else if (menuSelector.equals("rented books")) {
+            booksController.printRentedItemsAsUser(user);
+            booksController.selectItemToReturn(getInput(bufferSelector), user);
             printMainMenu();
         } else if (menuSelector.equals("list movies")) {
             moviesController.printAvailableItems();
@@ -79,6 +114,29 @@ public class BibliotecaApp {
         usersController.seedUsers();
         booksController.seedRentals();
         moviesController.seedRentals();
+    }
+
+    private void selectGoBack(BufferedReader bufferSelector) {
+        do {
+            System.out.println("invalid option");
+        } while (!getInput(bufferSelector.readLine()).equals("back"));
+//        if (getInput(bufferSelector).equals("back")) {
+//            printMainMenu();
+//        } else {
+//            System.out.println("invalid option");
+//        }
+    }
+
+    private void run(BufferedReader br) {
+        printMainMenu();
+        while (running) {
+            selectMainMenu(br);
+        }
+    }
+
+    private String askUser(BufferedReader br, String input) {
+        System.out.println("Please enter " + input);
+        return getInput(br);
     }
 
     private BufferedReader getReader() {

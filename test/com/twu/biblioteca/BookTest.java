@@ -5,10 +5,13 @@ import static org.junit.Assert.*;
 
 public class BookTest {
     private Book book;
+    private User user;
 
     @Before
     public void before() {
         book = new Book("On the Road", "Jack Kerouac", 1957);
+        user = new User("jack sprat", "456-4572");
+
     }
 
     @Test
@@ -19,6 +22,23 @@ public class BookTest {
     @Test
     public void hasAuthor() {
         assertEquals(book.getAuthor(), "Jack Kerouac");
+    }
+
+    @Test
+    public void hasUser() throws Exception {
+        assertEquals(book.getUser(), null);
+    }
+
+    @Test
+    public void setUser() throws Exception {
+        book.setUser(user);
+        assertEquals(user, book.getUser());
+    }
+
+    @Test
+    public void getRenterUsername() throws Exception {
+        book.setUser(user);
+        assertEquals(book.getRenterUsername(), "jack sprat");
     }
 
     @Test

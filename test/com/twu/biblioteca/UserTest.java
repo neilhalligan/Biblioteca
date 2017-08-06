@@ -32,6 +32,17 @@ public class UserTest {
     }
 
     @Test
+    public void hasLibrarian() throws Exception {
+        assertFalse(user1.isLibrarian());
+    }
+
+    @Test
+    public void setLibrarian() throws Exception {
+        user1.setLibrarian(true);
+        assertTrue(user1.isLibrarian());
+    }
+
+    @Test
     public void addToRentedBooks() throws Exception {
         Book book1 = new Book("The Great Gatsby", "F. Scott Fitzgerald", 1922);
         user1.addToRentedBooks(book1);

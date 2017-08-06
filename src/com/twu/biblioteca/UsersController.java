@@ -10,22 +10,25 @@ public class UsersController {
     public void seedUsers(){
         User user1 = new User("neil halligan", "123-4567");
         User user2 = new User("marco polo", "123-4567");
-        User user3 = new User("christopher columbus", "123-4567");
+        User librarian = new User("christopher columbus", "123-4567");
+        librarian.setLibrarian(true);
         users.add(user1);
         users.add(user2);
-        users.add(user3);
+        users.add(librarian);
     }
 
     public List<User> getUsers(){
         return users;
     }
 
-    public boolean login(String username, String password){
+    public User findUserByName(String username) {
+        User foundUser = null;
         for (User user : users) {
-            if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
-                return true;
+            if (username.equals(user.getUsername())) {
+                foundUser = user;
             }
         }
-        return false;
+        return foundUser;
     }
+
 }

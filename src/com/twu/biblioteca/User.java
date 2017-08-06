@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class User {
     private String username;
     private String password;
+    private boolean librarian = false;
     private ArrayList<Book> rentedBooks = new ArrayList<>();
 
     public User(String u, String p){
@@ -28,6 +29,13 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+    public boolean isLibrarian() {
+        return librarian;
+    }
+
+    public void setLibrarian(boolean isLibrarian) {
+        this.librarian = isLibrarian;
     }
 
     public void addToRentedBooks(Book book){

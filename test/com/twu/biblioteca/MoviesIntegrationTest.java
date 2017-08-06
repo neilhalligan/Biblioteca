@@ -18,12 +18,13 @@ public class MoviesIntegrationTest {
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
         biblioteca = new BibliotecaApp();
-//        biblioteca.booksController.seedRentals();
-        biblioteca.moviesController.seedRentals();
+        biblioteca.seed();
+        biblioteca.sessionsController.login("neil halligan", "123-4567");
+
         movieMenuMessage = "Type movie title to checkout movie, type \"back\" to go back\n";
         mainMenuMessage =
                 "Main Menu\nEnter one of the following options to continue\n" +
-                        "-list books\n-return books\n-list movies\n-return movies\n-quit\n";
+                        "-available books\n-rented books\n-list movies\n-return movies\n-quit\n";
         returnMovieMenuMessage = "Type movie title to return movie, type \"back\" to go back\n";
     }
 
@@ -36,7 +37,7 @@ public class MoviesIntegrationTest {
         for(Movie movie : biblioteca.moviesController.availableItems) {
             expectedOutput += movie.getName() + " | " + movie.getYear() + " | " + movie.getDirector() + " | " + movie.getMovieRating() + "\n";
         }
-        biblioteca.selectMainMenu(menuInput);
+        biblioteca.selectMainMenuAsUser(menuInput);
         expectedOutput += "Thank you! Enjoy the movie\n";
         expectedOutput += mainMenuMessage;
         assertEquals(expectedOutput, outContent.toString());
@@ -50,7 +51,7 @@ public class MoviesIntegrationTest {
         for(Movie movie : biblioteca.moviesController.availableItems) {
             expectedOutput += movie.getName() + " | " + movie.getYear() + " | " + movie.getDirector() + " | " + movie.getMovieRating() + "\n";
         }
-        biblioteca.selectMainMenu(menuInput);
+        biblioteca.selectMainMenuAsUser(menuInput);
         expectedOutput += mainMenuMessage;
         assertEquals(expectedOutput, outContent.toString());
     }
@@ -63,7 +64,7 @@ public class MoviesIntegrationTest {
         for(Movie movie : biblioteca.moviesController.availableItems) {
             expectedOutput += movie.getName() + " | " + movie.getYear() + " | " + movie.getDirector() + " | " + movie.getMovieRating() + "\n";
         }
-        biblioteca.selectMainMenu(menuInput);
+        biblioteca.selectMainMenuAsUser(menuInput);
         expectedOutput += "That movie is not available.\n";
         expectedOutput += mainMenuMessage;
         assertEquals(expectedOutput, outContent.toString());
@@ -78,7 +79,7 @@ public class MoviesIntegrationTest {
         for(Movie movie : biblioteca.moviesController.rentedItems) {
             expectedOutput += movie.getName() + " | " + movie.getYear() + " | " + movie.getDirector() + " | " + movie.getMovieRating() + "\n";
         }
-        biblioteca.selectMainMenu(menuInput);
+        biblioteca.selectMainMenuAsUser(menuInput);
         expectedOutput += "Thank you for returning the movie.\n";
         expectedOutput += mainMenuMessage;
         assertEquals(expectedOutput, outContent.toString());
@@ -94,7 +95,7 @@ public class MoviesIntegrationTest {
         for(Movie movie : biblioteca.moviesController.rentedItems) {
             expectedOutput += movie.getName() + " | " + movie.getYear() + " | " + movie.getDirector() + " | " + movie.getMovieRating() + "\n";
         }
-        biblioteca.selectMainMenu(menuInput);
+        biblioteca.selectMainMenuAsUser(menuInput);
         expectedOutput += mainMenuMessage;
         assertEquals(expectedOutput, outContent.toString());
     }
@@ -107,7 +108,7 @@ public class MoviesIntegrationTest {
         for(Movie movie : biblioteca.moviesController.rentedItems) {
             expectedOutput += movie.getName() + " | " + movie.getYear() + " | " + movie.getDirector() + " | " + movie.getMovieRating() + "\n";
         }
-        biblioteca.selectMainMenu(menuInput);
+        biblioteca.selectMainMenuAsUser(menuInput);
         expectedOutput += "That is not a valid movie to return.\n";
         expectedOutput += mainMenuMessage;
         assertEquals(expectedOutput, outContent.toString());

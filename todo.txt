@@ -81,14 +81,14 @@ User Accounts - Login - As a librarian, I want to know who has checked out a boo
         x-has a login method
         x-accesses current menu
         x-has an array with this users checked out books only. access through this user.
-            -unit test add and remove book.
-            -integration test add and remove book.
+            x-unit test add and remove book.
+            x-integration test add and remove book.
 
     -create librarian class
-        -has password.
-        -has a username.
-        -has a login method.
-        -can see "checked out books" only.
+        x-can see "checked out books" only.
+	x- add extra option for librarian (inst var)
+	x-add second print option
+	x-show different menu
 
 User Accounts - User information - As a customer, I want to be able to see my user information (name, email address and phone
             number), so that I know that the library can contact me. This option should only be available when the customer is
@@ -112,8 +112,22 @@ User Accounts - User information - As a customer, I want to be able to see my us
     11. need to test all private methods
     12. a lot of books in user test, try to move up to controller level
     13. checkout lambda functions
+	14 findRentalByTitle has book list at the end, move back into 
+-change list books/return books to rented/available for all
+The for all books option in testing book lists, need to input manually in case there is an error (no, instead check to make sure there is at least one book in list)
+-build book.user function and refactor all
+-stop librarian from renting books
+-when enter wrong book title, don’t go back to prev menu. Stay on current menu
+-give little explanation of return books i.e.. “rented by Neil. Halligan
+
 
     old
     2. ask for number entry in main menu, and title entry in book menus
     7. bookList should be mocked in test -> ie. adding more books to actual book list shouldnt break tests
     13. mainMenuMessage shows up a lot -> should remove and test once
+
+This loop
+Make sure librarian can’t return book
+Fix duplicate select menus somehow
+Make findUserByName static method
+Fix that do … while loop!

@@ -16,12 +16,15 @@ public class BooksController extends RentalsController {
         Book bookA = new Book("The Great Gatsby", "F. Scott Fitzgerald", 1922);
         Book bookB = new Book("Moby Dick","Herman Melville", 1851);
         Book bookC = new Book("Frankenstein","Mary Shelley", 1818);
+        Book bookD = new Book("Heart of Darkness","Konrad Singer", 1974);
         availableItems.add(bookA);
         availableItems.add(bookB);
         availableItems.add(bookC);
-        User user = usersController.getUsers().get(0);
-        rentItem(bookC, user);
-
+        availableItems.add(bookD);
+        User user1 = usersController.findUserByName("neil halligan");
+        rentItem(bookC, user1);
+        User user2 = usersController.findUserByName("marco polo");
+        rentItem(bookD, user2);
     }
 
     public void printAvailableItems(){
@@ -31,28 +34,35 @@ public class BooksController extends RentalsController {
         }
     }
 
-    public void printRentedItems(){
+    public void printRentedItemsAsUser(User user){
         System.out.println("Type book title to return book, type \"back\" to go back");
-        for(Book book : rentedItems) {
+        for(Book book : rentedItemsByUser(user)) {
             System.out.println(book.getTitle() + " | " + book.getAuthor() + " | " + book.getYearPublished());
         }
     }
 
+    public void printRentedItemsAsLibrarian(){
+        System.out.println("Type book title to return book, type \"back\" to go back");
+        for(Book book : rentedItems) {
+            System.out.println(book.getTitle() + " | " + book.getAuthor() + " | " +
+                    book.getYearPublished() + " | " + book.getRenterUsername());
+        }
+    }
+
     public void rentItem(Book book, User user) {
-//        User user = usersController.getUsers().get(0);
-        user.addToRentedBooks(book);
+        book.setUser(user);
         availableItems.remove(book);
         rentedItems.add(book);
     }
 
     public void returnItem(Book book) {
+        book.setUser(null);
         rentedItems.remove(book);
         availableItems.add(book);
     }
 
-    public void selectItemToCheckout(String selector) {
+    public void selectItemToCheckout(String selector, User user) {
         Book bookToCheckout = findRentalByTitle(selector, availableItems);
-        User user = usersController.getUsers().get(0);
         if (bookToCheckout != null) {
             rentItem(bookToCheckout, user); // , user
             System.out.println("Thank you! Enjoy the book");
@@ -62,8 +72,8 @@ public class BooksController extends RentalsController {
         }
     }
 
-    public void selectItemToReturn(String selector) {
-        Book bookToReturn = findRentalByTitle(selector, rentedItems);
+    public void selectItemToReturn(String selector, User user) {
+        Book bookToReturn = findRentalByTitle(selector, rentedItemsByUser(user));
         if (bookToReturn != null) {
             returnItem(bookToReturn);
             System.out.println("Thank you for returning the book.");
@@ -73,7 +83,7 @@ public class BooksController extends RentalsController {
         }
     }
 
-    private Book findRentalByTitle(String bookTitle, List<Book> books) {
+    public Book findRentalByTitle(String bookTitle, List<Book> books) {
         Book foundBook = null;
         for (Book book : books) {
             if (bookTitle.equals(book.getTitle())) {
@@ -81,6 +91,16 @@ public class BooksController extends RentalsController {
             }
         }
         return foundBook;
+    }
+
+    public List<Book> rentedItemsByUser(User user) {
+        List<Book> rentedItemByUser = new ArrayList<>();
+        for(Book book : rentedItems) {
+            if (book.getUser() == user) {
+                rentedItemByUser.add(book);
+            }
+        }
+        return rentedItemByUser;
     }
 
     public UsersController getUsersController() {

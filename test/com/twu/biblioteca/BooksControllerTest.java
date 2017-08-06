@@ -16,6 +16,7 @@ public class BooksControllerTest {
     private Book book1;
     private Book book2;
     private Book book3;
+    private Book book4;
     private String bookMenuMessage;
     private String returnMenuMessage;
     private UsersController usersController;
@@ -32,6 +33,8 @@ public class BooksControllerTest {
         book1 = new Book("The Great Gatsby", "F. Scott Fitzgerald", 1922);
         book2 = new Book("Moby Dick","Herman Melville", 1851);
         book3 = new Book("Frankenstein","Mary Shelley", 1818);
+        book4 = new Book("Heart of Darkness","Konrad Singer", 1974);
+
         bookMenuMessage = "Type book title to checkout book, type \"back\" to go back\n";
         returnMenuMessage = "Type book title to return book, type \"back\" to go back\n";
     }
@@ -46,7 +49,22 @@ public class BooksControllerTest {
     public void hasCustomerBooks() throws Exception {
         List<Book> testCustomerBooks = new ArrayList<>();
         testCustomerBooks.add(book3);
+        testCustomerBooks.add(book4);
         assertEquals(booksController.rentedItems, testCustomerBooks);
+    }
+
+    @Test
+    public void RentedItemsByUser() throws Exception {
+        List<Book> testCustomerBooks = new ArrayList<>();
+        testCustomerBooks.add(book3);
+        User user = usersController.findUserByName("neil halligan");
+        assertEquals(booksController.rentedItemsByUser(user), testCustomerBooks);
+    }
+
+    @Test
+    public void hasUsersController() throws Exception {
+        UsersController usersController = booksController.getUsersController();
+        assertTrue(usersController instanceof UsersController);
     }
 
     @Test
@@ -60,44 +78,28 @@ public class BooksControllerTest {
     }
 
     @Test
-    public void printReturnBooks() throws Exception {
-        String expectedOutput = returnMenuMessage;
-        for(Book book : booksController.rentedItems) {
-            expectedOutput += book.getTitle() + " | " + book.getAuthor() + " | " + book.getYearPublished() + "\n";
-        }
-        booksController.printRentedItems();
-        Assert.assertEquals(expectedOutput, outContent.toString());
-    }
-
-    @Test
     public void seedRentals() throws Exception {
         assertEquals(book1, booksController.availableItems.get(0));
         assertEquals(book2, booksController.availableItems.get(1));
     }
 
     @Test
-    public void rentItem() throws Exception {
+    public void rentsItemAndAssignsUser() throws Exception {
         List<User> userList  = booksController.usersController.getUsers();
         User renter = userList.get(1);
         Book rentedBook = booksController.availableItems.get(0);
         booksController.rentItem(rentedBook, renter);
+        assertEquals(renter, rentedBook.getUser());
         assertFalse(booksController.availableItems.contains(rentedBook));
-//        assertTrue(booksController.rentedItems.contains(rentedBook));
-        assertTrue(renter.getRentedBooks().contains(rentedBook));
+        assertTrue(booksController.rentedItems.contains(rentedBook));
     }
 
     @Test
     public void returnItem() throws Exception {
-        User userReturningBook = usersController.getUsers().get(0);
+        User userReturningBook = usersController.findUserByName("neil halligan");
         Book returnBook = booksController.rentedItems.get(0);
         booksController.returnItem(returnBook);
         assertTrue(booksController.availableItems.contains(returnBook));
         assertFalse(booksController.rentedItems.contains(returnBook));
-    }
-
-    @Test
-    public void hasUsersController() throws Exception {
-        UsersController usersController = booksController.getUsersController();
-        assertTrue(usersController instanceof UsersController);
     }
 }

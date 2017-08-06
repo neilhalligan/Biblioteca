@@ -4,6 +4,7 @@ public class Book {
     private String title;
     private String author;
     private int yearPublished;
+    private User user = null;
 
     public int getYearPublished() {
         return yearPublished;
@@ -22,6 +23,18 @@ public class Book {
     public String getTitle() {
 
         return title;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public String getRenterUsername(){
+        return this.getUser().getUsername();
     }
 
     public boolean equals(Object object) {

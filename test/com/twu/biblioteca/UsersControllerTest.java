@@ -29,8 +29,10 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void login() throws Exception {
-        assertFalse(usersController.login("neil halligan", "999-9999"));
-        System.out.println(usersController.login("neil halligan", "123-4567"));
+    public void findUserByName() throws Exception {
+        User user = usersController.findUserByName("smarco rolo");
+        assertEquals(user, null);
+        user = usersController.findUserByName("marco polo");
+        assertEquals(user.getUsername(), "marco polo");
     }
 }
